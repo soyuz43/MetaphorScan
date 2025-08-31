@@ -1,0 +1,17 @@
+sedative:
+  - term: hallucination
+    replacement: fabrication
+    description: Implies truth-seeking failure, obscuring design consequence (*Epistemic Autoimmunity*, Section 2).
+  - term: error
+    replacement: fabrication
+    description: Downplays structural flaws as quirks (*Nuremberg Defense*).
+prophylactic:
+  - term: intelligence
+    replacement: pattern simulation
+    description: Implies sentience, misdirecting discourse (*Epistemic Void Generator*).
+  - term: training
+    replacement: data conditioning
+    description: Anthropomorphizes mechanical process (*Nuremberg Defense*).
+  - term: alignment
+    replacement: structure-tracking
+    description: Cargo cult term avoiding structural critique (*Epistemic Autoimmunity*, Section 3).

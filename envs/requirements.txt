@@ -1,0 +1,11 @@
+spacy==3.7.2           # Rule-based lexical matching
+transformers==4.38.0   # Contextual analysis (BERT/DistilBERT)
+gensim==4.3.2          # Attractor basin detection (LSA/Word2Vec)
+pypdf2==3.0.1          # PDF text extraction
+python-docx==1.1.0     # Word document extraction
+pyyaml==6.0.1          # Config file parsing
+pandas==2.2.0          # Data handling for reports
+reportlab==4.0.9       # PDF report generation
+numpy==1.26.4          # Numerical operations
+torch==2.2.0           # PyTorch for Transformers (CPU support)
+datasets==2.17.0       # Hugging Face datasets for fine-tuning

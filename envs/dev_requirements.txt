@@ -1,0 +1,5 @@
+-r requirements.txt     # Include base dependencies
+pytest==8.0.0          # Unit and integration testing
+pytest-cov==4.1.0      # Test coverage
+black==24.2.0          # Code formatting
+flake8==7.0.0          # Linting

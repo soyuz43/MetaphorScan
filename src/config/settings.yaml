@@ -1,0 +1,11 @@
+pipeline:
+  confidence_threshold: 0.7
+  max_file_size_mb: 50
+models:
+  spacy_model: en_core_web_sm
+  transformer_model: distilbert-base-uncased
+output:
+  report_format: pdf
+  highlight_colors:
+    sedative: yellow
+    prophylactic: red

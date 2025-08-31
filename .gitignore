@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+metaphorscan_env/
+*.egg-info/
+
+# Data and outputs
+data/raw/*
+data/processed/*
+data/models/*
+outputs/*
+!data/.gitkeep
+!outputs/.gitkeep
+
+# IDE and OS files
+.vscode/*
+!.vscode/settings.json
+*.log
+.DS_Store
