@@ -19,12 +19,12 @@ MetaphorScan detects and categorizes metaphors that shape how we understand AI s
 
 ## ✨ Key Features
 
-- **🔍 Two-Stage Detection**: spaCy lexical matching + DistilBERT contextual validation
-- **🌀 Attractor Basin Detection**: Identifies zones of high metaphor density
-- **📊 Professional Reports**: Comprehensive PDF analysis with theoretical explanations
-- **💻 Windows Optimized**: Built for MINGW64 environment with Python 3.12
-- **📁 Multiple Formats**: Supports PDF, TXT, and Markdown input files
-- **⚡ Large File Support**: Chunked processing for files up to 50MB
+- **Two-Stage Detection**: spaCy lexical matching + DistilBERT contextual validation
+- **Attractor Basin Detection**: Identifies zones of high metaphor density
+- **Professional Reports**: Comprehensive PDF analysis with theoretical explanations
+- **Windows Optimized**: Built for MINGW64 environment with Python 3.12
+- **Multiple Formats**: Supports PDF, TXT, and Markdown input files
+- **Large File Support**: Chunked processing for files up to 50MB
 
 ## 🚀 Quick Start
 
