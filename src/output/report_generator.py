@@ -327,7 +327,7 @@ class MetaphorScanReportGenerator:
             self.story.append(Spacer(1, 0.2*inch))
     
     def _add_metaphor_table(self, metaphors: List[Dict[str, Any]], category: str):
-        """Add a table of metaphors for a specific category with wrapped cells."""
+        """Add a table of metaphors for a specific category with wrapped cells and page-fit widths."""
         # Headers as Paragraphs
         headers = [
             self._p("Term", "TableHeader"),
@@ -337,18 +337,21 @@ class MetaphorScanReportGenerator:
             self._p("Explanation", "TableHeader"),
         ]
         rows: List[List[Any]] = [headers]
-        
+
         # Data rows as Paragraphs (wrap-enabled)
         for m in metaphors:
             term = m.get('term', '') or ''
             replacement = m.get('replacement', '') or ''
             confidence = f"{m.get('confidence', 0):.1%}"
+
             ctx = m.get('sentence_context', '') or ''
-            # soft cap to avoid pathological huge paragraphs while still wrapping
-            if len(ctx) > 220:
+            if len(ctx) > 220:  # soft cap for readability
                 ctx = ctx[:220] + "…"
+
             desc = m.get('description', '') or ''
-            
+            if len(desc) > 300:  # optional: cap super-long explanations
+                desc = desc[:300] + "…"
+
             rows.append([
                 self._p(term),
                 self._p(replacement),
@@ -356,17 +359,20 @@ class MetaphorScanReportGenerator:
                 self._p(ctx),
                 self._p(desc),
             ])
-        
-        # Column widths: more space for Context/Explanation
-        col_widths = [0.9*inch, 1.2*inch, 0.8*inch, 2.9*inch, 3.0*inch]
-        
+
+        # Fit columns to available frame width
+        W = getattr(self, "frame_width", 7.0 * inch)  # fallback if not set
+        weights = [0.12, 0.18, 0.10, 0.30, 0.30]      # Term, Replacement, Confidence, Context, Explanation
+        col_widths = [W * w for w in weights]
+
         table = Table(
             rows,
             colWidths=col_widths,
-            repeatRows=1,     # header repeats on page breaks
-            splitByRow=1      # allow table to split between rows (not inside a row)
+            repeatRows=1,   # header repeats on page breaks
+            splitByRow=1    # allow splitting between rows
         )
-        
+        table.hAlign = "LEFT"
+
         # Style table
         table_style = [
             ('BACKGROUND', (0, 0), (-1, 0), Color(0.85, 0.85, 0.85)),
@@ -375,13 +381,13 @@ class MetaphorScanReportGenerator:
             ('FONTSIZE', (0, 0), (-1, -1), 8),
             ('GRID', (0, 0), (-1, -1), 1, black),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('LEFTPADDING', (0, 0), (-1, -1), 4),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 4),
-            ('TOPPADDING', (0, 0), (-1, -1), 3),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+            ('LEFTPADDING', (0, 0), (-1, -1), 3),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 3),
+            ('TOPPADDING', (0, 0), (-1, -1), 2),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [white, Color(0.96, 0.96, 0.96)]),
         ]
-        
+
         # Highlight term column with category color
         if category == 'sedative':
             table_style.append(('BACKGROUND', (0, 1), (0, -1),
@@ -389,10 +395,10 @@ class MetaphorScanReportGenerator:
         elif category == 'prophylactic':
             table_style.append(('BACKGROUND', (0, 1), (0, -1),
                                 get_color_from_name(self.highlight_colors.get('prophylactic', 'red'))))
-        
+
         table.setStyle(TableStyle(table_style))
         self.story.append(table)
-    
+
     def add_attractor_basin_analysis(self, attractor_basins: List[Dict[str, Any]], semantic_basins: List[Dict[str, Any]] = None):
         """Add analysis of epistemic attractor basins."""
         all_basins: List[Dict[str, Any]] = []
@@ -600,21 +606,21 @@ class MetaphorScanReportGenerator:
             self.story.append(Paragraph(f"• {rec}", self.styles['Normal']))
             self.story.append(Spacer(1, 0.1*inch))
     
-    def generate_report(self, analysis_results: Dict[str, Any], input_file: str, 
+    def generate_report(self, analysis_results: Dict[str, Any], input_file: str,
                         original_text: str = "") -> str:
         """
         Generate complete PDF report from analysis results.
-        
+
         Args:
             analysis_results: Combined results from pipeline analysis
             input_file: Path to original input file
             original_text: Original text content for highlighting
-            
+
         Returns:
             str: Path to generated PDF report
         """
         logger.info(f"Generating PDF report: {self.output_path}")
-        
+
         # Extract data from analysis results
         if 'validated_matches' in analysis_results:
             # New format from contextual analyzer
@@ -628,39 +634,45 @@ class MetaphorScanReportGenerator:
             attractor_basins = []
             semantic_basins = []
             stats = {}
-        
+
         # Compile summary statistics
         summary_stats = {
             'total_metaphors': len(validated_matches),
             'sedative_count': len([m for m in validated_matches if m.get('category') == 'sedative']),
             'prophylactic_count': len([m for m in validated_matches if m.get('category') == 'prophylactic']),
             'attractor_basins': len(attractor_basins) + len(semantic_basins),
-            'average_confidence': sum(m.get('confidence', 0) for m in validated_matches) / max(len(validated_matches), 1)
+            'average_confidence': (
+                sum(m.get('confidence', 0) for m in validated_matches) /
+                max(len(validated_matches), 1)
+            ),
         }
         summary_stats.update(stats)  # Add any additional stats
-        
+
         # Create PDF document (slightly tighter margins to fit wrapped text)
         doc = SimpleDocTemplate(
             str(self.output_path),
             pagesize=letter,
-            rightMargin=0.6*inch,
-            leftMargin=0.6*inch,
-            topMargin=0.9*inch,
-            bottomMargin=0.6*inch
+            rightMargin=0.6 * inch,
+            leftMargin=0.6 * inch,
+            topMargin=0.9 * inch,
+            bottomMargin=0.6 * inch,
         )
-        
+
+        # Provide frame width to table builder so it fits the page
+        self.frame_width = doc.width
+
         # Build report content
         self.add_title_page(summary_stats, input_file)
         self.add_executive_summary(summary_stats)
         self.add_metaphor_analysis(validated_matches)
         self.add_attractor_basin_analysis(attractor_basins, semantic_basins)
-        
+
         if original_text:
             self.add_highlighted_text(original_text, validated_matches)
-        
+
         self.add_methodology_section()
         self.add_recommendations(summary_stats)
-        
+
         # Generate PDF
         try:
             doc.build(self.story)
@@ -669,6 +681,7 @@ class MetaphorScanReportGenerator:
         except Exception as e:
             logger.error(f"Error generating PDF report: {e}")
             raise
+
 
 # Convenience function for direct usage
 def generate_metaphor_report(analysis_results: Dict[str, Any], output_path: str, 
