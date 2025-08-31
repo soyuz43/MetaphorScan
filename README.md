@@ -159,7 +159,7 @@ If you use MetaphorScan in your research, please cite:
 @software{metaphorscan2024,
   title={MetaphorScan: Detecting Sedative and Prophylactic Metaphors in AI Discourse},
   author={MetaphorScan Contributors},
-  year={2024},
+  year={2025},
   url={https://github.com/Soyuz43/MetaphorScan}
 }
 ```
