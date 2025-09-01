@@ -33,6 +33,11 @@ MetaphorScan detects and categorizes metaphors that shape how we understand AI s
 - Python 3.12+ (at `/c/Python312/python`)
 - Virtual environment activated
 
+## Setup
+Activate the virtual environment:
+```bash
+source /c/Users/thisi/workspace/personal/MetaphorScan/envs/metaphorscan_env/Scripts/activate
+```
 ### Installation & Usage
 
 ```bash
