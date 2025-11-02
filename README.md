@@ -36,7 +36,7 @@ MetaphorScan detects and categorizes metaphors that shape how we understand AI s
 ## Setup
 Activate the virtual environment:
 ```bash
-source /c/Users/thisi/workspace/personal/MetaphorScan/envs/metaphorscan_env/Scripts/activate
+source /c/Users/<your-username>/workspace/personal/MetaphorScan/envs/metaphorscan_env/Scripts/activate
 ```
 ### Installation & Usage
 
